@@ -342,7 +342,7 @@ namespace WeaponPlus
                     break;
                 default: break;
             }
-            cost *= (1 + 0.2f * Level) * 0.7f;
+            cost *= (1 + WeaponPlus.config.升级花费增加 * Level) * 0.7f;
             if (Level < 3)
                 cost *= 0.2f;
             price = (int)(cost * temp.maxStack * WeaponPlus.config.花费参数);
