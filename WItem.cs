@@ -317,7 +317,7 @@ namespace WeaponPlus
                         {
                             return false;
                         }
-                        else if (orig_useAnimation * 1.0f / (orig_useAnimation - (useSpeed_level + 1)) > WeaponPlus.config.武器升级速度上限倍数)
+                        else if (orig_useAnimation * 1.0f / (orig_useAnimation - (useSpeed_level + 1)) > WeaponPlus.config.武器升级攻速上限倍数)
                         {
                             return false;
                         }

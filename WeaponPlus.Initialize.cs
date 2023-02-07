@@ -56,24 +56,24 @@ namespace WeaponPlus
                            "当你不小心扔出或其他原因导致强化无效，请使用指令 /plus load 来重新获取。每次重新获取都会从当前背包中查找并强制拿出来重给，请注意捡取避免丢失。\n" +
                            "重新获取时重给的物品是单独给予，不会被其他玩家捡走，每次进入服务器时会强制重新获取。\n" +
                            "第一个物品栏是强化栏，指令只对该物品栏内的物品起效，强化完即可将武器拿走换至其他栏位，功能类似于哥布林的重铸槽。";
-            string tips2 = "输入 /plus    --查看当前该武器的等级状态\n" +
-                           "输入 /plus load    --将当前身上所有已升级的武器重新获取\n" +
-                           "输入 /plus [damage / da / 伤害] [up / down]    --升级/降级当前武器的伤害等级\n" +
-                           "输入 /plus [scale / sc / 大小] [up / down]   --升级/降级当前武器或射弹的体积等级 ±5%\n" +
-                           "输入 /plus [knockback / kn / 击退] [up / down]    --升级/降级当前武器的击退等级 ±5%\n" +
-                           "输入 /plus [usespeed / us / 用速] [up / down]    --升级/降级当前武器的使用速度等级\n" +
-                           "输入 /plus [shootspeed / sh / 飞速] [up / down]    --升级/降级当前武器的射弹飞行速度等级，这个会影响鞭类武器的范围 ±5%\n" +
-                           "输入 /plus clear    --清理当前武器的所有等级，可以回收一点消耗物\n" +
-                           "输入 /clearallplayersplus    --将数据库中所有玩家的所有强化物品全部清理，管理员专属";
+            string tips2 = "输入 /plus    查看当前该武器的等级状态\n" +
+                           "输入 /plus load    将当前身上所有已升级的武器重新获取\n" +
+                           "输入 /plus [damage/da/伤害] [up/down]    升级/降级当前武器的伤害等级\n" +
+                           "输入 /plus [scale/sc/大小] [up/down]   升级/降级当前武器或射弹的体积等级 ±5%\n" +
+                           "输入 /plus [knockback/kn/击退] [up/down]    升级/降级当前武器的击退等级 ±5%\n" +
+                           "输入 /plus [usespeed/us/用速] [up/down]    升级/降级当前武器的使用速度等级\n" +
+                           "输入 /plus [shootspeed/sh/飞速] [up/down]    升级/降级当前武器的射弹飞行速度等级，影响鞭类武器范围±5%\n" +
+                           "输入 /plus clear    清理当前武器的所有等级，可以回收一点消耗物\n" +
+                           "输入 /clearallplayersplus    将数据库中所有玩家的所有强化物品全部清理，管理员专属";
 
             // help
             if (args.Parameters.Count == 1 && args.Parameters[0].Equals("help", StringComparison.OrdinalIgnoreCase))
             {
                 if (!args.Player.Active)
-                    args.Player.SendInfoMessage(tips1 + "\n" + tips2);
+                    args.Player.SendInfoMessage($"{tips1}\n{tips2}");
                 else
                 {
-                    args.Player.SendMessage(tips1, Color.DeepPink);
+                    args.Player.SendMessage(tips1, new Color(255, 128, 255));
                     args.Player.SendMessage(tips2, getRandColor());
                 }
                 return;
