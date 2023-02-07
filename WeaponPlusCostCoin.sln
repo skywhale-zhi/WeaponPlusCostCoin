@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33103.184
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeaponPlusCostCoin", "WeaponPlusCostCoin.csproj", "{5CCF63D9-D089-4F26-88B0-FFBB5EB0C56C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5CCF63D9-D089-4F26-88B0-FFBB5EB0C56C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CCF63D9-D089-4F26-88B0-FFBB5EB0C56C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CCF63D9-D089-4F26-88B0-FFBB5EB0C56C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CCF63D9-D089-4F26-88B0-FFBB5EB0C56C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {692B1197-EEA1-461E-9CEB-60747CDA5524}
+	EndGlobalSection
+EndGlobal
