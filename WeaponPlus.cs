@@ -9,9 +9,9 @@ namespace WeaponPlus
     public partial class WeaponPlus : TerrariaPlugin
     {
         public override string Author => "z枳";
-        public override string Description => "允许在基础属性上强化任何武器";
+        public override string Description => "允许在基础属性上强化任何武器, Allow any weapon to be strengthened on basic attributes";
         public override string Name => "WeaponPlusCostCoin";
-        public override Version Version => new Version(1, 0, 0, 0);
+        public override Version Version => new Version(1, 0, 0, 1);
 
         public string configPath = Path.Combine(TShock.SavePath, "WeaponPlus.json");
 
@@ -20,16 +20,22 @@ namespace WeaponPlus
         public static WPlayer[] wPlayers = new WPlayer[Main.maxPlayers + 1];
 
         /// <summary>
+        /// 指令语言提示
+        /// </summary>
+        public static List<List<string>> LangTips = new List<List<string>>();
+
+        /// <summary>
         /// 强化物品数据库
         /// </summary>
         public static WeaponPlusDB DB { get; set; }
 
-        public WeaponPlus(Main game ) : base(game) { }
+        public WeaponPlus(Main game) : base(game) { }
 
         public override void Initialize()
         {
             config = Config.LoadConfig();
             DB = new WeaponPlusDB(TShock.DB);
+            NewLangTips();
 
             GeneralHooks.ReloadEvent += OnReload;
             ServerApi.Hooks.NetGreetPlayer.Register(this, OnGreetPlayer);
@@ -37,11 +43,11 @@ namespace WeaponPlus
 
             Commands.ChatCommands.Add(new Command("weaponplus.plus", PlusItem, "plus")
             {
-                HelpText = "输入 /plus help   查看 plus 系列指令帮助"
+                HelpText = LangTipsGet("输入 /plus    查看当前该武器的等级状态和升至下一级需要多少材料")
             });
             Commands.ChatCommands.Add(new Command("weaponplus.admin", ClearPlusItem, "clearallplayersplus")
             {
-                HelpText = "输入 /clearallplayersplus   将数据库中所有玩家的所有强化物品全部清理"
+                HelpText = LangTipsGet("输入 /clearallplayersplus    将数据库中所有玩家的所有强化物品全部清理，管理员专属")
             });
         }
 
@@ -53,6 +59,87 @@ namespace WeaponPlus
                 ServerApi.Hooks.NetGreetPlayer.Deregister(this, OnGreetPlayer);
                 ServerApi.Hooks.ServerLeave.Deregister(this, OnServerLeave);
             }
+        }
+
+
+        public void NewLangTips()
+        {
+            LangTips.Add(new List<string> { "几乎所有的武器和弹药都能强化，但是强化结果会无效化词缀，作为补偿，前三次强化价格降低 80%", "Almost all weapons and ammunition can be strengthened, but the strengthening results will invalidate the affixes. As compensation, the price of the first three enhancements will be reduced by 80%" });
+            LangTips.Add(new List<string> { "强化绑定一类武器，即同 ID 武器，而不是单独的一个物品。强化与人物绑定，不可分享，扔出即失效，只在背包，猪猪等个人私有库存内起效。", "Strengthen the binding of a type of weapon, that is, the same ID weapon, rather than a single item. Strengthen the binding with the character, which cannot be shared. Throw it out and it will become invalid. It only works in the private inventory of backpacks, piggy bank and other individuals." });
+            LangTips.Add(new List<string> { "当你不小心扔出或其他原因导致强化无效，请使用指令 /plus load 来重新获取。每次重新获取都会从当前背包中查找并强制拿出来重给，请注意捡取避免丢失。", "When you throw it out carelessly or the reinforcement is invalid for other reasons, please use the command </plus load> to retrieve it again. Each time you retrieve it, you will find it from the current backpack and force it to be taken out again. Please pay attention to picking up to avoid loss." });
+            LangTips.Add(new List<string> { "重新获取时重给的物品是单独给予，不会被其他玩家捡走，每次进入服务器时会默认强制重新获取。", "The items to be re-acquired are given separately and will not be picked up by other players. Each time you enter the server, you will be forced to re-acquire by default." });
+            LangTips.Add(new List<string> { "第一个物品栏是强化栏，指令只对该物品栏内的物品起效，强化完即可将武器拿走换至其他栏位，功能类似于哥布林的重铸槽。", "The first item column is the reinforcement column. The command only works on the items in this item column. After the reinforcement, the weapon can be taken away and replaced to another column. The function is similar to the recasting slot of Goblin." });
+            LangTips.Add(new List<string> { "输入 /plus    查看当前该武器的等级状态和升至下一级需要多少材料", "Enter /plus     --to view the current level status of the weapon and how many materials are needed to upgrade to the next level" });
+            LangTips.Add(new List<string> { "输入 /plus help    查看 plus 系列指令帮助", "Enter /plus help     --to view the help of the plus series of instructions" });
+            LangTips.Add(new List<string> { "输入 /plus load    将当前身上所有已升级的武器重新获取", "Enter /plus load     --to reacquire all upgraded weapons on the current inventory" });
+            LangTips.Add(new List<string> { "输入 /plus [damage/da/伤害] [up/down]    升级/降级当前武器的伤害等级", "Enter /plus [damage/da] [up/down]     --to upgrade/downgrade the damage level of the current weapon" });
+            LangTips.Add(new List<string> { "输入 /plus [scale/sc/大小] [up/down]   升级/降级当前武器或射弹的体积等级 ±5%", "Enter /plus [scale/sc] [up/down]     --to upgrade/downgrade the volume level of the current weapon or projectile by ± 5%" });
+            LangTips.Add(new List<string> { "输入 /plus [knockback/kn/击退] [up/down]    升级/降级当前武器的击退等级 ±5%", "Enter /plus [knockback/kn] [up/down]     --to upgrade/downgrade the knockback level of the current weapon by ± 5%" });
+            LangTips.Add(new List<string> { "输入 /plus [usespeed/us/用速] [up/down]    升级/降级当前武器的使用速度等级", "Enter /plus [usespeed/us] [up/down]     --to upgrade/downgrade the speed level of the current weapon" });
+            LangTips.Add(new List<string> { "输入 /plus [shootspeed/sh/飞速] [up/down]    升级/降级当前武器的射弹飞行速度等级，影响鞭类武器范围±5%", "Enter /plus [shootspeed/sh] [up/down]     --to upgrade/downgrade the projectile flying speed level of the current weapon, affecting the range of whip weapons by ± 5%" });
+            LangTips.Add(new List<string> { "输入 /plus clear    清理当前武器的所有等级，可以回收一点消耗物", "Enter /plus clear     --to clear all levels of the current weapon, and you can recycle some consumables" });
+            LangTips.Add(new List<string> { "输入 /clearallplayersplus    将数据库中所有玩家的所有强化物品全部清理，管理员专属", "Enter /clearallplayersplus     --to clear all enhancement items of all players in the database, exclusive to the administrator" });
+
+            LangTips.Add(new List<string> { "该指令必须在游戏内使用", "This command must be used in the game" });
+            LangTips.Add(new List<string> { "请在第一个物品栏内放入武器而不是其他什么东西或空", "Please put weapons in the first item column instead of anything else or empty" });
+            LangTips.Add(new List<string> { "当前物品：", "Current item: " });
+            LangTips.Add(new List<string> { "您当前的升级武器已重新读取", "Your current upgraded weapon has been re-read" });
+            LangTips.Add(new List<string> { "当前武器没有任何等级，不用回炉重做", "The current weapon has no level, so you don't need to redo it" });
+            LangTips.Add(new List<string> { "完全重置成功！钱币回收：", "Complete reset succeeded! Coin recovery: " });
+            LangTips.Add(new List<string> { "升级成功", "Upgrade succeeded" });
+            LangTips.Add(new List<string> { "共计消耗：", "Total consumption: " });
+            LangTips.Add(new List<string> { "降级成功", "Degraded successfully" });
+            LangTips.Add(new List<string> { "当前 0 级无需回置", "Current level 0 does not need to be reset" });
+            LangTips.Add(new List<string> { "当前该类型升级已达到上限，无法升级", "Currently, the upgrade of this type has reached the upper limit and cannot be upgraded" });
+            LangTips.Add(new List<string> { "扣除钱币：", "Deduct coins: " });
+            LangTips.Add(new List<string> { "当前剩余：", "Current remaining: " });
+            LangTips.Add(new List<string> { "钱币不够！", "Not enough money!" });
+            LangTips.Add(new List<string> { "所有玩家的所有强化数据全部清理成功！", "All enhancement data of all players have been cleared successfully!" });
+            LangTips.Add(new List<string> { "强化数据清理失败！！!", "Enhanced data cleaning failed!!!" });
+
+            LangTips.Add(new List<string> { "当前总等级：", "Current total level: " });
+            LangTips.Add(new List<string> { "剩余强化次数：", "How many times can the weapon be strengthened: " });
+            LangTips.Add(new List<string> { "次", "times" });
+            LangTips.Add(new List<string> { "伤害等级：", "damage level: " });
+            LangTips.Add(new List<string> { "大小等级：", "scale level: " });
+            LangTips.Add(new List<string> { "击退等级：", "knockback level: " });
+            LangTips.Add(new List<string> { "攻速等级：", "use time level: " });
+            LangTips.Add(new List<string> { "射弹飞行速度等级：", "projectile speed level: " });
+            LangTips.Add(new List<string> { "未升级过，无任何加成", "Not upgraded, no bonus" });
+            LangTips.Add(new List<string> { "当前状态：", "Current status: " });
+            LangTips.Add(new List<string> { "伤害", "damage" });
+            LangTips.Add(new List<string> { "大小", "scale" });
+            LangTips.Add(new List<string> { "击退", "knockback" });
+            LangTips.Add(new List<string> { "攻速", "use time" });
+            LangTips.Add(new List<string> { "射弹飞速", "projectile speed" });
+            LangTips.Add(new List<string> { "伤害升至下一级需：", "Damage to the next level requires: " });
+            LangTips.Add(new List<string> { "大小升至下一级需：", "Scale to the next level requires: " });
+            LangTips.Add(new List<string> { "击退升至下一级需：", "KnockBack to the next level requires: " });
+            LangTips.Add(new List<string> { "攻速升至下一级需：", "UseTime to the next level requires: " });
+            LangTips.Add(new List<string> { "射弹飞速升至下一级需：", "Proiectile speed to the next level requires: " });
+            LangTips.Add(new List<string> { "当前已满级", "The current level is full" });
+            LangTips.Add(new List<string> { "已达到最大武器总等级", "The maximum total weapon level has been reached" });
+        }
+
+
+        /// <summary>
+        /// 获取指令的翻译版本
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string LangTipsGet(string str)
+        {
+            foreach (var v in LangTips)
+            {
+                if (v.Contains(str))
+                {
+                    if (Thread.CurrentThread.CurrentCulture.Name.Equals("zh-Hans", StringComparison.OrdinalIgnoreCase))
+                        return v[0];
+                    else//en-US
+                        return v[1];
+                }
+            }
+            return string.Empty;
         }
     }
 }

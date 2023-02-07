@@ -6,8 +6,6 @@ using Terraria.UI;
 using Terraria.Utilities;
 using TerrariaApi.Server;
 using TShockAPI;
-using TShockAPI.DB;
-using static Terraria.GameContent.Prefixes.PrefixLegacy;
 
 namespace WeaponPlus
 {
@@ -159,7 +157,6 @@ namespace WeaponPlus
                     stack = player.inventory[i].stack;
                     prefix = player.inventory[i].prefix;
                     player.inventory[i].TurnToAir();
-                    TSPlayer.All.SendInfoMessage("试图清理物品");
                     TShock.Players[who].SendData(PacketTypes.PlayerSlot, "", who, i, 0, 0f, 0);
                     //生成新物品
                     if (model == 0)
@@ -212,7 +209,7 @@ namespace WeaponPlus
         {
             if (!WItem.plusPrice(plusType, out long price))
             {
-                whoAMI.SendMessage("当前该类型升级已达到上限，无法升级", Color.Red);
+                whoAMI.SendMessage(LangTipsGet("当前该类型升级已达到上限，无法升级"), Color.Red);
                 return false;
             }
             if (DeductCoin(whoAMI, price))
@@ -223,12 +220,12 @@ namespace WeaponPlus
                 long num3 = Terraria.Utils.CoinsCount(out flag, whoAMI.TPlayer.bank2.item, new int[0]);
                 long num4 = Terraria.Utils.CoinsCount(out flag, whoAMI.TPlayer.bank3.item, new int[0]);
                 long num5 = Terraria.Utils.CoinsCount(out flag, whoAMI.TPlayer.bank4.item, new int[0]);
-                whoAMI.SendMessage("扣除钱币：" + cointostring(price, out List<Item> temp) + "   当前剩余：" + cointostring(num1 + num2 + num3 + num4 + num5, out temp), Color.Pink);
+                whoAMI.SendMessage(LangTipsGet("扣除钱币：") + cointostring(price, out List<Item> temp) + "   " + LangTipsGet("当前剩余：") + cointostring(num1 + num2 + num3 + num4 + num5, out temp), Color.Pink);
                 return true;
             }
             else
             {
-                whoAMI.SendInfoMessage("钱币不够！");
+                whoAMI.SendInfoMessage(LangTipsGet("钱币不够！"));
                 return false;
             }
         }

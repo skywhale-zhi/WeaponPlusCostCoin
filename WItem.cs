@@ -115,9 +115,9 @@ namespace WeaponPlus
             StringBuilder sb = new StringBuilder();
             long price;
             if (Level > 0)
-                sb.AppendLine($"当前总等级：{Level}   剩余强化次数：{WeaponPlus.config.最多升级次数 - Level} 次    伤害等级：{damage_level}, 大小等级：{scale_level}, 击退等级：{knockBack_level}, 攻速等级：{useSpeed_level}, 射弹飞行速度等级：{shootSpeed_level}");
+                sb.AppendLine($"{WeaponPlus.LangTipsGet("当前总等级：")}{Level}   {WeaponPlus.LangTipsGet("剩余强化次数：")}{WeaponPlus.config.最多升级次数_MaximunofLevel - Level} {WeaponPlus.LangTipsGet("次")}    {WeaponPlus.LangTipsGet("伤害等级：")}{damage_level}, {WeaponPlus.LangTipsGet("大小等级：")}{scale_level}, {WeaponPlus.LangTipsGet("击退等级：")}{knockBack_level}, {WeaponPlus.LangTipsGet("攻速等级：")}{useSpeed_level}, {WeaponPlus.LangTipsGet("射弹飞行速度等级：")}{shootSpeed_level}");
             else
-                sb.AppendLine("未升级过，无任何加成");
+                sb.AppendLine(WeaponPlus.LangTipsGet("未升级过，无任何加成"));
             float u;
             int damage = (int)(orig_damage * 0.05f * damage_level);
             if (damage < damage_level)
@@ -125,21 +125,21 @@ namespace WeaponPlus
                 damage = damage_level;
             }
             u = damage * 1.0f / orig_damage;
-            sb.Append($"当前状态：伤害 +{u:0.00%}，大小 +{0.05f * scale_level:0.00%}，击退 +{0.05f * knockBack_level:0.00%}，");
+            sb.Append($"{WeaponPlus.LangTipsGet("当前状态：")}{WeaponPlus.LangTipsGet("伤害")} +{u:0.00%}，{WeaponPlus.LangTipsGet("大小")} +{0.05f * scale_level:0.00%}，{WeaponPlus.LangTipsGet("击退")} +{0.05f * knockBack_level:0.00%}，");
             u = orig_useAnimation * 1.0f / (orig_useAnimation - useSpeed_level) - 1;
-            sb.AppendLine($"攻速：+{u:0.00%}，射弹飞速：+{0.05f * shootSpeed_level:0.00%}");
+            sb.AppendLine($"{WeaponPlus.LangTipsGet("攻速")}+{u:0.00%}，{WeaponPlus.LangTipsGet("射弹飞速")}+{0.05f * shootSpeed_level:0.00%}");
 
-            if (Level < WeaponPlus.config.最多升级次数)
+            if (Level < WeaponPlus.config.最多升级次数_MaximunofLevel)
             {
-                sb.AppendLine($"伤害升至下一级需：{(plusPrice(PlusType.damage, out price) ? WeaponPlus.cointostring(price, out List<Item> temp) : "当前已满级")}");
-                sb.AppendLine($"大小升至下一级需：{(plusPrice(PlusType.scale, out price) ? WeaponPlus.cointostring(price, out temp) : "当前已满级")}");
-                sb.AppendLine($"击退升至下一级需：{(plusPrice(PlusType.knockBack, out price) ? WeaponPlus.cointostring(price, out temp) : "当前已满级")}");
-                sb.AppendLine($"攻速升至下一级需：{(plusPrice(PlusType.useSpeed, out price) ? WeaponPlus.cointostring(price, out temp) : "当前已满级")}");
-                sb.Append($"射弹飞速升至下一级需：{(plusPrice(PlusType.shootSpeed, out price) ? WeaponPlus.cointostring(price, out temp) : "当前已满级")}");
+                sb.AppendLine($"{WeaponPlus.LangTipsGet("伤害升至下一级需：")}{(plusPrice(PlusType.damage, out price) ? WeaponPlus.cointostring(price, out List<Item> temp) : WeaponPlus.LangTipsGet("当前已满级"))}");
+                sb.AppendLine($"{WeaponPlus.LangTipsGet("大小升至下一级需：")}{(plusPrice(PlusType.scale, out price) ? WeaponPlus.cointostring(price, out temp) : WeaponPlus.LangTipsGet("当前已满级"))}");
+                sb.AppendLine($"{WeaponPlus.LangTipsGet("击退升至下一级需：")}{(plusPrice(PlusType.knockBack, out price) ? WeaponPlus.cointostring(price, out temp) : WeaponPlus.LangTipsGet("当前已满级"))}");
+                sb.AppendLine($"{WeaponPlus.LangTipsGet("攻速升至下一级需：")}{(plusPrice(PlusType.useSpeed, out price) ? WeaponPlus.cointostring(price, out temp) : WeaponPlus.LangTipsGet("当前已满级"))}");
+                sb.Append($"{WeaponPlus.LangTipsGet("射弹飞速升至下一级需：")}{(plusPrice(PlusType.shootSpeed, out price) ? WeaponPlus.cointostring(price, out temp) : WeaponPlus.LangTipsGet("当前已满级"))}");
             }
             else
             {
-                sb.Append("已达到最大武器总等级");
+                sb.Append(WeaponPlus.LangTipsGet("已达到最大武器总等级"));
             }
             return sb.ToString();
         }
@@ -154,7 +154,7 @@ namespace WeaponPlus
         {
             Item temp = TShock.Utils.GetItemById(id);
             price = 0;
-            if(Level >= WeaponPlus.config.最多升级次数)
+            if(Level >= WeaponPlus.config.最多升级次数_MaximunofLevel)
             {
                 return false;
             }
@@ -265,7 +265,7 @@ namespace WeaponPlus
                             cost = (1f / orig_damage) * (itemvalue * 20 * k);
                             damage = damage_level + 1;
                         }
-                        if (damage + orig_damage > WeaponPlus.config.武器升级伤害上限倍数 * orig_damage)
+                        if (damage + orig_damage > WeaponPlus.config.武器升级伤害上限倍数_MaximumDamageMultipleOfWeaponUpgrade * orig_damage)
                         {
                             return false;
                         }
@@ -275,7 +275,7 @@ namespace WeaponPlus
                     break;
                 case PlusType.scale:
                     {
-                        if (orig_scale + orig_scale * 0.05f * (scale_level + 1) > orig_scale * WeaponPlus.config.武器升级尺寸上限倍数)
+                        if (orig_scale + orig_scale * 0.05f * (scale_level + 1) > orig_scale * WeaponPlus.config.武器升级尺寸上限倍数_MaximumScaleMultipleOfWeaponUpgrade)
                         {
                             return false;
                         }
@@ -285,7 +285,7 @@ namespace WeaponPlus
                     break;
                 case PlusType.knockBack:
                     {
-                        if (orig_knockBack + orig_knockBack * 0.05f * (knockBack_level + 1) > orig_knockBack * WeaponPlus.config.武器升级击退上限倍数)
+                        if (orig_knockBack + orig_knockBack * 0.05f * (knockBack_level + 1) > orig_knockBack * WeaponPlus.config.武器升级击退上限倍数_MaximumKnockBackMultipleOfWeaponUpgrade)
                         {
                             return false;
                         }
@@ -299,15 +299,15 @@ namespace WeaponPlus
                     {
                         int shangxian;
                         if (temp.melee)
-                            shangxian = WeaponPlus.config.近战武器升级攻速上限;
+                            shangxian = WeaponPlus.config.近战武器升级攻速上限_MaximumAttackSpeedOfMeleeWeaponUpgrade;
                         else if (temp.magic)
-                            shangxian = WeaponPlus.config.魔法武器升级攻速上限;
+                            shangxian = WeaponPlus.config.魔法武器升级攻速上限_MaximumAttackSpeedOfMagicWeaponUpgrade;
                         else if (temp.ranged)
-                            shangxian = WeaponPlus.config.远程武器升级攻速上限;
+                            shangxian = WeaponPlus.config.远程武器升级攻速上限_MaximumAttackSpeedOfRangeWeaponUpgrade;
                         else if (temp.summon)
-                            shangxian = WeaponPlus.config.召唤武器升级攻速上限;
+                            shangxian = WeaponPlus.config.召唤武器升级攻速上限_MaximumAttackSpeedOfSummonWeaponUpgrade;
                         else
-                            shangxian = WeaponPlus.config.其他武器升级攻速上限;
+                            shangxian = WeaponPlus.config.其他武器升级攻速上限_MaximumAttackSpeedOfOtherWeaponUpgrade;
 
                         if (orig_useAnimation - (useSpeed_level + 1) < shangxian || orig_useAnimation <= shangxian)
                         {
@@ -317,7 +317,7 @@ namespace WeaponPlus
                         {
                             return false;
                         }
-                        else if (orig_useAnimation * 1.0f / (orig_useAnimation - (useSpeed_level + 1)) > WeaponPlus.config.武器升级攻速上限倍数)
+                        else if (orig_useAnimation * 1.0f / (orig_useAnimation - (useSpeed_level + 1)) > WeaponPlus.config.武器升级攻速上限倍数_MaximumUseTimeMultipleOfWeaponUpgrade)
                         {
                             return false;
                         }
@@ -334,7 +334,7 @@ namespace WeaponPlus
                     break;
                 case PlusType.shootSpeed:
                     {
-                        if (orig_shootSpeed + orig_shootSpeed * 0.05f * (shootSpeed_level + 1) > orig_shootSpeed * WeaponPlus.config.武器升级射弹飞速上限倍数)
+                        if (orig_shootSpeed + orig_shootSpeed * 0.05f * (shootSpeed_level + 1) > orig_shootSpeed * WeaponPlus.config.武器升级射弹飞速上限倍数_MaximumProjectileSpeedMultipleOfWeaponUpgrade)
                         {
                             return false;
                         }
@@ -342,10 +342,10 @@ namespace WeaponPlus
                     break;
                 default: break;
             }
-            cost *= (1 + WeaponPlus.config.升级花费增加 * Level) * 0.7f;
+            cost *= (1 + WeaponPlus.config.升级花费增加_UpgradeCostsIncrease * Level) * 0.7f;
             if (Level < 3)
                 cost *= 0.2f;
-            price = (int)(cost * temp.maxStack * WeaponPlus.config.花费参数);
+            price = (int)(cost * temp.maxStack * WeaponPlus.config.花费参数_CostParameters);
             return true;
         }
     }
